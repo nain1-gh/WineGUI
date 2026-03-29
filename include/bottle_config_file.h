@@ -21,6 +21,7 @@
 #pragma once
 
 #include "app_list_struct.h"
+#include <glibmm/keyfile.h>
 #include <map>
 #include <string>
 #include <tuple>
@@ -28,6 +29,7 @@
 
 struct BottleConfigData
 {
+  int config_version;
   std::string name;
   std::string description;
   std::string wine_bin_path;
@@ -54,4 +56,10 @@ private:
   ~BottleConfigFile();
   BottleConfigFile(const BottleConfigFile&) = delete;
   BottleConfigFile& operator=(const BottleConfigFile&) = delete;
+
+  static constexpr int CONFIG_VERSION_CURRENT = 2;
+  static constexpr int CONFIG_VERSION_LEGACY = 1;
+
+  static int detect_config_version(Glib::KeyFile& keyfile);
+  static bool migrate_config(Glib::KeyFile& keyfile, int from_version);
 };
